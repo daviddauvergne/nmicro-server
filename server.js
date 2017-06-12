@@ -206,7 +206,7 @@ var loadRoutes = function(){
 			if(route.version)
 				def.version = route.version;
 
-			routeAndHandlers[routeName] = [];
+			routeAndHandlers[routeName] = [def];
 
 			// errors
 			if(route.errors){
