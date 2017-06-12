@@ -52,8 +52,8 @@ var configFileSample = path.join(__dirname,'.env.example');
 if(!fs.existsSync(configFile)){
 	// create configuration
 	fs.copySync(configFileSample, configFile);
-	fs.copySync(path.join(__dirname,'data','ok.js'),path.join(dir,'jschema','res','ok.js'));
-	fs.copySync(path.join(__dirname,'data','error.js'),path.join(dir,'jschema','res','error.js'));
+	fs.copySync(path.join(__dirname,'data','ok.json'),path.join(dir,'jschema','res','ok.json'));
+	fs.copySync(path.join(__dirname,'data','error.json'),path.join(dir,'jschema','res','error.json'));
 	const pjson = require('./package.json');
 	logger.msg([{b_blue: pjson.name}],true);
 	logger.msg([{green:  'Version: '+pjson.version}]);
