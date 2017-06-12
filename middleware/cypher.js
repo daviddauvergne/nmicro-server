@@ -1,4 +1,16 @@
-// Cypher middleWare
+/**
+	* Cypher middleWare
+	* Run session neo4j
+	* @param {string} cypherPath (required)
+	* @param {array} associateKeys (optional)
+	* @return {mixed} result request neo4j
+
+	ex:
+	tool.cypherMdw('foo/bar') => req.cypher
+
+	tool.cypherMdw('foo/bar',['bar']) => req.cypher.bar
+
+*/
 const fs = require('fs');
 const path = require('path');
 const parse = require('parse-neo4j').parse;

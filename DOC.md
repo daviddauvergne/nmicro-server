@@ -28,3 +28,104 @@ Simple serveur REST basé sur [restify](http://restify.com/)
 			- **ok.json** ➔ fichierJSON schema pour une réponse valide simple : {message:'ok'}
 	- **routes** ➔ dossier pour les routes ex: routes/user/login.js
 - **config.env** ➔ fichier de configuration pour nmicro-server
+
+## Route example
+
+```js
+
+module.exports = function(tool){
+	/*
+	tool : NMICRO_SERVER tools
+	 - logger (logging)
+	 - session (Simply user session)
+	 - middleWare :
+		 - cypherMdw (Cypher middleWare)
+	};
+	*/
+	return {
+		// Route method get, post, put, del (required)
+		method : 'post',
+
+		// Route name (required)
+		name : 'foobar',
+
+		// version route
+		// version: '2.0.0' or ['2.0.0', '2.1.0', '2.2.0']
+
+		// Route path (required)
+		path : '/foo/bar',
+
+		// List of authorized roles (optional)
+		role : ['User'],
+
+		// Validation in/out with JSON schema
+		schema : {
+			// request JSON schema
+			req : 'req/foo/bar', // path : jschema/req/foo/bar.json
+			// response JSON schema (test mode only!)
+			// Key => HTTP code
+			res : {
+				200 : 'res/ok', // path : jschema/res/ok.json
+				401 : 'res/error' // path : jschema/res/error.json
+			}
+		},
+
+		// Routes errors
+		// Key => HTTP code
+		// value  => object
+		//          code => type string, Restify error code: http://restify.com/#error-handling
+		//          message type string
+		errors : {
+			401 : {code:'UnauthorizedError',message:'Invalid email or password'}
+		},
+
+		// handler
+		handler : [
+
+			/**
+				* Cypher middleWare
+				* Run session neo4j
+				* @param {string} cypherPath (required)
+				* @param {array} associateKeys (optional)
+				* @return {mixed} result request neo4j
+
+				ex:
+				tool.cypherMdw('foo/bar') => req.cypher
+
+				tool.cypherMdw('foo/bar',['bar']) => req.cypher.bar
+
+			*/
+			tool.cypherMdw('foo/bar',['bar']),
+
+			function (req, res, next) {
+
+				console.log(req.cypher.bar);
+
+				// emmit Error
+				// return next(tool.logger.err_foobar401());
+
+
+				/** session
+
+					tool.session.set(user)
+					@param user {object}
+
+					tool.session.update(user,callback)
+					@param user {object}
+					@param calbach {object}
+
+					tool.session.del(user)
+					@param user {object}
+
+					Quand rôle n'est pas undefined
+					alors les information de l'utilisateur sont accessibles ainsi: req.user
+
+				*/
+
+				res.send({message:'ok'});
+				return next();
+			}
+		]
+	};
+};
+```

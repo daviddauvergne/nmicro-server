@@ -1,14 +1,17 @@
 # NMICRO-SERVER v:1.0.8
 
-## Start neo4j
+## Install
 
-		$ service neo4j start
+		$ cd /path/to/nmicro-server/
+		$ npm install
 
-## Start Redis
+## Help
 
-		$ systemctl start redis
+		$ node server.js --help
 
 ## Start test
+
+If this is the first micro-server startup, this one will first create the folder structure and ask you to update the config file
 
 		$ node server.js /path/to/project --test
 
