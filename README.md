@@ -1,4 +1,4 @@
-# NMICRO-SERVER v:1.8
+# NMICRO-SERVER v:1.0.8
 
 ## Start neo4j
 

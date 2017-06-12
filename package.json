@@ -1,0 +1,35 @@
+{
+  "name": "NMICRO-SERVER",
+  "version": "1.0.8",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://root@84.14.117.186:222/home/CdProject/bestdoc-web"
+  },
+  "author": "David Dauvergne",
+  "license": "ISC",
+  "dependencies": {
+    "ajv": "^5.1.5",
+    "dotenv-safe": "^4.0.4",
+    "fs-extra": "^3.0.0",
+    "json2md": "^1.5.8",
+    "jsonwebtoken": "^7.4.0",
+    "markdown-table": "^1.1.0",
+    "neo4j-driver": "^1.2.0",
+    "parse-neo4j": "^0.6.8",
+    "passport": "^0.3.2",
+    "passport-jwt": "^2.2.1",
+    "redis": "^2.7.1",
+    "require-reload": "^0.2.2",
+    "restify": "^4.3.0",
+    "sprintf-js": "^1.1.1",
+    "watchr": "^3.0.1",
+    "winston": "^2.3.1",
+    "yargs": "^8.0.1"
+  },
+  "devDependencies": {}
+}

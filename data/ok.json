@@ -1,0 +1,11 @@
+{
+	"type": "object",
+	"properties": {
+		"message": {
+			"description":"Ok response",
+			"type": "string",
+			"const": "ok"
+		}
+	},
+ "required": ["message"]
+}
