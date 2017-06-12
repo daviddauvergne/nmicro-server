@@ -25,7 +25,6 @@ module.exports = function(logger,redis) {
 	return function(role){
 		return function (req, res, next) {
 			passport.authenticate('jwt', { session: false },function(err, _user) {
-				console.log(_user);
 				redis.user.update(_user,function(user){
 					if(user){
 						if (role.indexOf(user.role) === -1)
