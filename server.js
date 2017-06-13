@@ -175,6 +175,8 @@ var getFiles = function(_path, files){
 var routesFiles = [];
 var routeAndHandlers = {};
 
+var errorSchema = loadSchema('res/error');
+
 var loadRoutes = function(){
 
 	// cypher middleWare
@@ -281,7 +283,18 @@ client.on('connect', function() {
 
 			// No found event
 			server.on('NotFound',function(req,res,error,next){
-				logger.error(error.message);
+				logger.warn(error.message);
+				res.header("Access-Control-Allow-Origin", "*");
+				res.header("Access-Control-Allow-Headers", "X-Requested-With");
+				res.setHeader("Access-Control-Allow-Methods", "POST, GET");
+				res.setHeader("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+				if(req.method === "OPTIONS"){
+					res.send(200);
+				} else {
+					res.send(404,{code:"NotFoundError",message:'Page was not found'});
+					logger.line();
+				}
+				next();
 			});
 
 			// Test data final request
@@ -290,22 +303,28 @@ client.on('connect', function() {
 				if(route && route.spec){
 					if(error){
 						logger.info(route.spec.path+' - HTTP code: '+error.statusCode);
-
+						var existSchema = false;
+						var schema = errorSchema;
 						if(TMROUTES[route.spec.name].res[error.statusCode]){
-							var schema = TMROUTES[route.spec.name].res[error.statusCode];
-							var ajv = new Ajv({allErrors: true});
-							var valid = ajv.validate(schema,error.body);
-							if (!valid) {
-								logger.error(
-									'response schema does not conform [code: '+error.statusCode+']\n'+
-									ajv.errorsText(valid.errors,{separator: "\n"})
-								);
-							} else {
-								logger.info('"━━━ OK ━━━"');
-							}
-						} else {
-							logger.error('response schema does not exist [code: '+error.statusCode+']');
+							existSchema = true;
+							schema = TMROUTES[route.spec.name].res[error.statusCode];
 						}
+
+						var ajv = new Ajv({allErrors: true});
+						var valid = ajv.validate(schema,error.body);
+						if (!valid) {
+							logger.error(
+								'response schema does not conform [code: '+error.statusCode+']\n'+
+								ajv.errorsText(valid.errors,{separator: "\n"})
+							);
+						} else {
+							var defaultSchema = '"';
+							if(!existSchema)
+								defaultSchema = ' [warn: default schema error]"'
+							logger.info('"━━━ OK ━━━'+defaultSchema);
+						}
+						if(!existSchema)
+							logger.warn('response schema does not exist [code: '+error.statusCode+']');
 					} else {
 						logger.info(route.spec.path+' - HTTP code: 200');
 						if(TMROUTES[route.spec.name].res['200']){
@@ -318,7 +337,7 @@ client.on('connect', function() {
 									ajv200.errorsText(valid200.errors,{separator: "\n"})
 								);
 							} else {
-								logger.info('"OK"');
+								logger.info('"━━━ OK ━━━"');
 							}
 						} else {
 							logger.error('response schema does not exist [code: 200]');
