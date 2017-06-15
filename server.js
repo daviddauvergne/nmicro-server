@@ -156,6 +156,8 @@ var loadSchema = function(name){
 		return schema;
 	} catch (e) {
 		logger.msg([{red:'Error load schema: '+name}]);
+		if(TESTMODE)
+			return '';
 		process.exit(1);
 	}
 };
@@ -340,7 +342,10 @@ client.on('connect', function() {
 								logger.info('"━━━ OK ━━━"');
 							}
 						} else {
-							logger.error('response schema does not exist [code: 200]');
+							if(res._headers && res._headers['content-type'] && res._headers['content-type']!='application/json')
+								logger.info(res._headers['content-type']);
+							else
+								logger.error('response schema does not exist [code: 200]');
 						}
 					}
 					logger.line();
