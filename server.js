@@ -114,7 +114,7 @@ if(process.env.NMICRO_SERVER_CERTIFICATE_PATH!='null'){
 	else
 		logger.msg([{red:'Invalid NMICRO_SERVER_KEY_PATH !'}]);
 }
-const server = restify.createServer();
+const server = restify.createServer(retifyOpts);
 
 server.use(restify.bodyParser({
 	maxBodySize: 0,
